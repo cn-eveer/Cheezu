@@ -4,4 +4,6 @@ nono4me_androidstudio/*
 !nono4me_androidstudio/.gitignore
 !nono4me_androidstudio/pubspec.yaml
 
+.DS_Store
+
 #this is the stuff in the inner gitignore
