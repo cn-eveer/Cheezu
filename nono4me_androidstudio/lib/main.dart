@@ -86,6 +86,7 @@ class _HomeState extends State<Home> {
     //polulineCoordinates is the List of longitute and latidtude.
     double totalDistance = 0;
     for(var i = 0; i < polylineCoordinates.length-1; i++){
+      //print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
       totalDistance += calculateDistance(
           polylineCoordinates[i].latitude,
           polylineCoordinates[i].longitude,
