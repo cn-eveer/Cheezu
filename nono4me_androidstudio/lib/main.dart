@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
   GoogleMapController? mapController; //contrller for Google map
   PolylinePoints polylinePoints = PolylinePoints();
 
-  String googleAPiKey = "AIzaSyDma7ThRPGokuU_cJ2Q_qFvowIpK35RAPs";
+  String googleAPiKey = "AIzaSyCNnT3fExXiDeRkiojMLWrKHYSGrgcqgdY";
 
   Set<Marker> markers = Set(); //markers for google map
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
@@ -121,9 +121,6 @@ class _HomeState extends State<Home> {
         cos(lat1 * p) * cos(lat2 * p) *
             (1 - cos((lon2 - lon1) * p))/2;
     var result = 12742 * asin(sqrt(a));
-    if (result < 1){
-      return result*1000;
-    }
     return result;
   }
 
@@ -159,7 +156,8 @@ class _HomeState extends State<Home> {
                       child: Card(
                         child: Container(
                             padding: EdgeInsets.all(20),
-                            child: Text("Total Distance: " + distance.toStringAsFixed(2) + " KM",
+                            child: Text(distance>1 ? "Total Distance: " + distance.toStringAsFixed(2) + " KM":
+                                                      "Total Distance: " + (distance*1000).toStringAsFixed(2) + " M",
                                 style: TextStyle(fontSize: 20, fontWeight:FontWeight.bold))
                         ),
                       )
