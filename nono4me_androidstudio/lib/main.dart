@@ -33,14 +33,15 @@ class _HomeState extends State<Home> {
   Set<Marker> markers = Set(); //markers for google map
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
 
-  LatLng startLocation = LatLng(35, 139.71956051510892);
-  LatLng endLocation = LatLng(39, 139.71956051510892);
-  LatLng currLocation = LatLng(35, 139.71956051510892);
+  LatLng startLocation = LatLng(35.70889019165479, 139.7196163108637);
+  LatLng endLocation = LatLng(35.73889019165479, 139.7196163108637);
+  LatLng currLocation = LatLng(35.70889019165479, 139.7196163108637);
   Timer? timer;
   Timer? timer2;
   var tooFar = Event();
   var arrived = Event();
-  bool leading = true;
+  bool leading = false;
+  bool goingHome = false;
 
   double distance = 0.0;
 
@@ -57,27 +58,32 @@ class _HomeState extends State<Home> {
       icon: BitmapDescriptor.defaultMarker, //Icon for Marker
     ));
     timer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
-    timer2 = Timer.periodic(Duration(seconds: 2), (Timer t) => simulateMovement());
+    timer2 = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
     tooFar.subscribe((args) => askForDestination());
     arrived.subscribe((args) => switchLocations());
     super.initState();
   }
 
   simulateMovement(){
-    currLocation = LatLng(currLocation.latitude+1, 139.71956051510892);
+    if(!goingHome) {
+      //print("Going");
+      currLocation = LatLng(currLocation.latitude+0.01, 139.7196163108637);
+    }
+    else{
+      //print("Going back");
+      currLocation = LatLng(currLocation.latitude-0.01, 139.7196163108637);
+    }
   }
 
   switchLocations(){
     var a = startLocation;
     startLocation = endLocation;
     endLocation = a;
+    print("Setting course back for home");
+    leadToDestination();
   }
 
   askForDestination(){
-    leadToDestination();
-  }
-  leadToDestination(){
-    leading = true;
     markers.add(Marker( //add distination location marker
       markerId: MarkerId(endLocation.toString()),
       position: endLocation, //position of marker
@@ -87,7 +93,11 @@ class _HomeState extends State<Home> {
       ),
       icon: BitmapDescriptor.defaultMarker, //Icon for Marker
     ));
-
+    leadToDestination();
+  }
+  leadToDestination(){
+    leading = true;
+    print("leading to destination");
     getDirections(); //fetch direction polylines from Google API
   }
 
@@ -109,10 +119,15 @@ class _HomeState extends State<Home> {
         currLocation.longitude,
         endLocation.latitude,
         endLocation.longitude) * 1000;
-    print(distanceToDestination);
-    if (distanceToDestination < 40 && leading){
-        print("You have arrived");
-        arrived.broadcast();
+    //print(distanceToDestination);
+    if (leading){
+        print(distanceToDestination);
+        if(distanceToDestination < 40) {
+          print("You have arrived");
+          goingHome=!goingHome;
+          arrived.broadcast();
+        }
+        leadToDestination();
     }
     if(!leading){
       if (distanceFromHouse > 40){
