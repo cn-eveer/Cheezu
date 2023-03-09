@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math';
+import 'dart:async';
+import 'package:event/event.dart';
 
 void main(){
   runApp(MyApp());
@@ -31,25 +33,51 @@ class _HomeState extends State<Home> {
   Set<Marker> markers = Set(); //markers for google map
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
 
-  LatLng startLocation = LatLng(35.70907622433401, 139.71956051510892);
-  LatLng endLocation = LatLng(35.70583548232032, 139.70755335504074);
+  LatLng startLocation = LatLng(35, 139.71956051510892);
+  LatLng endLocation = LatLng(39, 139.71956051510892);
+  LatLng currLocation = LatLng(35, 139.71956051510892);
+  Timer? timer;
+  Timer? timer2;
+  var tooFar = Event();
+  var arrived = Event();
+  bool leading = true;
 
   double distance = 0.0;
 
 
   @override
   void initState() {
-
     markers.add(Marker( //add start location marker
-      markerId: MarkerId(startLocation.toString()),
-      position: startLocation, //position of marker
+      markerId: MarkerId(currLocation.toString()),
+      position: currLocation, //position of marker
       infoWindow: InfoWindow( //popup info
         title: 'Starting Point ',
         snippet: 'Start Marker',
       ),
       icon: BitmapDescriptor.defaultMarker, //Icon for Marker
     ));
+    timer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
+    timer2 = Timer.periodic(Duration(seconds: 2), (Timer t) => simulateMovement());
+    tooFar.subscribe((args) => askForDestination());
+    arrived.subscribe((args) => switchLocations());
+    super.initState();
+  }
 
+  simulateMovement(){
+    currLocation = LatLng(currLocation.latitude+1, 139.71956051510892);
+  }
+
+  switchLocations(){
+    var a = startLocation;
+    startLocation = endLocation;
+    endLocation = a;
+  }
+
+  askForDestination(){
+    leadToDestination();
+  }
+  leadToDestination(){
+    leading = true;
     markers.add(Marker( //add distination location marker
       markerId: MarkerId(endLocation.toString()),
       position: endLocation, //position of marker
@@ -61,8 +89,41 @@ class _HomeState extends State<Home> {
     ));
 
     getDirections(); //fetch direction polylines from Google API
+  }
 
-    super.initState();
+  checkLocation() async {
+    print("Checking too far");
+    // PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+    //   googleAPiKey,
+    //   PointLatLng(startLocation.latitude, startLocation.longitude),
+    //   PointLatLng(currLocation.latitude, currLocation.longitude),
+    //   travelMode: TravelMode.walking,
+    // );
+    double distanceFromHouse = calculateDistance(
+        startLocation.latitude,
+        startLocation.longitude,
+        currLocation.latitude,
+        currLocation.longitude) * 1000;
+    double distanceToDestination = calculateDistance(
+        currLocation.latitude,
+        currLocation.longitude,
+        endLocation.latitude,
+        endLocation.longitude) * 1000;
+    print(distanceToDestination);
+    if (distanceToDestination < 40 && leading){
+        print("You have arrived");
+        arrived.broadcast();
+    }
+    if(!leading){
+      if (distanceFromHouse > 40){
+        print("Oi where the fuck you going");
+        tooFar.broadcast();
+      }
+      else {
+        print("Still around house");
+        leading = false;
+      }
+    }
   }
 
   getDirections() async {
@@ -70,9 +131,9 @@ class _HomeState extends State<Home> {
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleAPiKey,
-      PointLatLng(startLocation.latitude, startLocation.longitude),
+      PointLatLng(currLocation.latitude, currLocation.longitude),
       PointLatLng(endLocation.latitude, endLocation.longitude),
-      travelMode: TravelMode.driving,
+      travelMode: TravelMode.walking,
     );
 
     if (result.points.isNotEmpty) {
@@ -86,7 +147,6 @@ class _HomeState extends State<Home> {
     //polulineCoordinates is the List of longitute and latidtude.
     double totalDistance = 0;
     for(var i = 0; i < polylineCoordinates.length-1; i++){
-      //print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
       totalDistance += calculateDistance(
           polylineCoordinates[i].latitude,
           polylineCoordinates[i].longitude,
