@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:event/event.dart';
+import 'package:geolocator/geolocator.dart';
 
 void main(){
   runApp(MyApp());
@@ -36,8 +37,8 @@ class _HomeState extends State<Home> {
   LatLng startLocation = LatLng(35.70889019165479, 139.7196163108637);
   LatLng endLocation = LatLng(35.73889019165479, 139.7196163108637);
   LatLng currLocation = LatLng(35.70889019165479, 139.7196163108637);
-  Timer? timer;
-  Timer? timer2;
+  Timer? checkLocationTimer;
+  Timer? simulateMovementTimer;
   var tooFar = Event();
   var arrived = Event();
   bool leading = false;
@@ -48,20 +49,23 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    markers.add(Marker( //add start location marker
-      markerId: MarkerId(currLocation.toString()),
-      position: currLocation, //position of marker
-      infoWindow: InfoWindow( //popup info
-        title: 'Starting Point ',
-        snippet: 'Start Marker',
-      ),
-      icon: BitmapDescriptor.defaultMarker, //Icon for Marker
-    ));
-    timer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
-    timer2 = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
+
+    checkLocationTimer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
+    //simulateMovementTimer = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
     tooFar.subscribe((args) => askForDestination());
     arrived.subscribe((args) => switchLocations());
     super.initState();
+  }
+  
+  updateCurrentUserLocation() async {
+    await Geolocator.requestPermission().then((value){
+    }).onError((error, stackTrace) async {
+      await Geolocator.requestPermission();
+      print("ERROR"+error.toString());
+    });
+    var pos = await Geolocator.getCurrentPosition();
+    currLocation = LatLng(pos.latitude, pos.longitude);
+    print(currLocation);
   }
 
   simulateMovement(){
@@ -84,6 +88,15 @@ class _HomeState extends State<Home> {
   }
 
   askForDestination(){
+    markers.add(Marker( //add start location marker
+      markerId: MarkerId(currLocation.toString()),
+      position: currLocation, //position of marker
+      infoWindow: InfoWindow( //popup info
+        title: 'Starting Point ',
+        snippet: 'Start Marker',
+      ),
+      icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+    ));
     markers.add(Marker( //add distination location marker
       markerId: MarkerId(endLocation.toString()),
       position: endLocation, //position of marker
@@ -103,6 +116,7 @@ class _HomeState extends State<Home> {
 
   checkLocation() async {
     print("Checking too far");
+    await updateCurrentUserLocation();
     // PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
     //   googleAPiKey,
     //   PointLatLng(startLocation.latitude, startLocation.longitude),
