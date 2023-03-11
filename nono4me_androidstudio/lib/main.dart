@@ -34,8 +34,8 @@ class _HomeState extends State<Home> {
   Set<Marker> markers = Set(); //markers for google map
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
 
-  LatLng startLocation = LatLng(35.70889019165479, 139.7196163108637);
-  LatLng endLocation = LatLng(35.73889019165479, 139.7196163108637);
+  LatLng startLocation = LatLng(35.70591, 139.354015);
+  LatLng endLocation = LatLng(35.7061, 139.3423);
   LatLng currLocation = LatLng(35.70889019165479, 139.7196163108637);
   Timer? checkLocationTimer;
   Timer? simulateMovementTimer;
