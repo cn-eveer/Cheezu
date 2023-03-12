@@ -115,7 +115,7 @@ class _HomeState extends State<Home> {
   }
 
   checkLocation() async {
-    print("Checking too far");
+    //print("Checking too far");
     await updateCurrentUserLocation();
     // PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
     //   googleAPiKey,
