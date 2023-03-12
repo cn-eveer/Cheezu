@@ -7,7 +7,6 @@ import 'package:event/event.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nono4me_androidstudio/screens/search_places_screen.dart';
 
-
 class MapScreen extends StatefulWidget{
   @override
   _HomeState createState() => _HomeState();
@@ -15,14 +14,14 @@ class MapScreen extends StatefulWidget{
 
 class _HomeState extends State<MapScreen> {
 
-  GoogleMapController? mapController; //contrller for Google map
+  GoogleMapController? googleMapController; //contrller for Google map
   PolylinePoints polylinePoints = PolylinePoints();
 
   String googleAPiKey = "AIzaSyCNnT3fExXiDeRkiojMLWrKHYSGrgcqgdY";
 
   Set<Marker> markers = Set(); //markers for google map
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
-
+  static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
   LatLng startLocation = LatLng(35.70591, 139.354015);
   LatLng endLocation = LatLng(35.7061, 139.3423);
   LatLng currLocation = LatLng(0, 0);
@@ -38,7 +37,6 @@ class _HomeState extends State<MapScreen> {
 
   @override
   void initState() {
-
     checkLocationTimer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
     //simulateMovementTimer = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
     tooFar.subscribe((args) => askForDestination());
@@ -78,11 +76,10 @@ class _HomeState extends State<MapScreen> {
 
   askForDestination(){
     tooFar.unsubscribe((args) => askForDestination());
-    tooFar.subscribe((args) => leadToDestination());
     markers.add(Marker( //add start location marker
       markerId: MarkerId(currLocation.toString()),
       position: currLocation, //position of marker
-      infoWindow: InfoWindow( //popup info
+      infoWindow: const InfoWindow( //popup info
         title: 'Starting Point ',
         snippet: 'Start Marker',
       ),
@@ -91,12 +88,13 @@ class _HomeState extends State<MapScreen> {
     markers.add(Marker( //add distination location marker
       markerId: MarkerId(endLocation.toString()),
       position: endLocation, //position of marker
-      infoWindow: InfoWindow( //popup info
+      infoWindow: const InfoWindow( //popup info
         title: 'Destination Point ',
         snippet: 'Destination Marker',
       ),
       icon: BitmapDescriptor.defaultMarker, //Icon for Marker
     ));
+    tooFar.subscribe((args) => leadToDestination());
     leadToDestination();
   }
   leadToDestination(){
@@ -225,7 +223,7 @@ class _HomeState extends State<MapScreen> {
                 mapType: MapType.normal, //map type
                 onMapCreated: (controller) { //method called when map is created
                   setState(() {
-                    mapController = controller;
+                    googleMapController = controller;
                   });
                 },
               ),

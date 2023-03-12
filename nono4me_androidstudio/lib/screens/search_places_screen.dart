@@ -32,14 +32,6 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
       ),
       body: Stack(
         children: [
-          GoogleMap(
-            initialCameraPosition: initialCameraPosition,
-            markers: markersList,
-            mapType: MapType.normal,
-            onMapCreated: (GoogleMapController controller) {
-              googleMapController = controller;
-            },
-          ),
           ElevatedButton(onPressed: _handlePressButton, child: const Text("Search Places"))
         ],
       ),
