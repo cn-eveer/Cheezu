@@ -6,8 +6,8 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 
 class SearchPlacesScreen extends StatefulWidget {
-  const SearchPlacesScreen({Key? key}) : super(key: key);
-  //final GoogleMapController controller;
+  const SearchPlacesScreen({Key? key, required this.controller}) : super(key: key);
+  final GoogleMapController? controller;
   @override
   State<SearchPlacesScreen> createState() => _SearchPlacesScreenState();
 }
@@ -17,12 +17,15 @@ final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
-
   Set<Marker> markersList = {};
 
-  late GoogleMapController googleMapController;
+  late GoogleMapController googleMapController = widget.controller!;
 
   final Mode _mode = Mode.overlay;
+  @override
+  void initState(){
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
         decoration: InputDecoration(
             hintText: 'Search',
             focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.white))),
-        components: [Component(Component.country,"jp"),Component(Component.country,"usa")]);
+        components: [Component(Component.country,"jp")]);
 
 
     displayPrediction(p!,homeScaffoldKey.currentState);

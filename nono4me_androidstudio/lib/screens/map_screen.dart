@@ -24,9 +24,10 @@ class _HomeState extends State<MapScreen> {
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
   LatLng startLocation = LatLng(35.70591, 139.354015);
   LatLng endLocation = LatLng(35.70613,139.3423);
+  //LatLng endLocation = LatLng(0, 0);
   LatLng currLocation = LatLng(0, 0);
   Timer? checkLocationTimer;
-  Timer? simulateMovementTimer;
+  //Timer? simulateMovementTimer;
   var tooFar = Event();
   var arrived = Event();
   bool leading = false;
@@ -238,7 +239,7 @@ class _HomeState extends State<MapScreen> {
                   )
               ),
               SearchPlacesScreen(
-                //controller: googleMapController;
+                controller: googleMapController,
               ),
             ]
         )
