@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nono4me_androidstudio/screens/map_screen.dart';
-import 'package:nono4me_androidstudio/screens/search_places_screen.dart';
 
 
 void main() {
@@ -19,6 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MapScreen(),
+
     );
   }
 }

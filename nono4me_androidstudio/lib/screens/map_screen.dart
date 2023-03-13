@@ -23,7 +23,7 @@ class _HomeState extends State<MapScreen> {
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
   LatLng startLocation = LatLng(35.70591, 139.354015);
-  LatLng endLocation = LatLng(35.7061, 139.3423);
+  LatLng endLocation = LatLng(0,0);
   LatLng currLocation = LatLng(0, 0);
   Timer? checkLocationTimer;
   Timer? simulateMovementTimer;
@@ -55,17 +55,6 @@ class _HomeState extends State<MapScreen> {
     print(currLocation);
   }
 
-  simulateMovement(){
-    if(!goingHome) {
-      //print("Going");
-      currLocation = LatLng(currLocation.latitude+0.01, 139.7196163108637);
-    }
-    else{
-      //print("Going back");
-      currLocation = LatLng(currLocation.latitude-0.01, 139.7196163108637);
-    }
-  }
-
   switchLocations(){
     var a = startLocation;
     startLocation = endLocation;
@@ -74,8 +63,8 @@ class _HomeState extends State<MapScreen> {
     leadToDestination();
   }
 
-  askForDestination(){
-    tooFar.unsubscribe((args) => askForDestination());
+  askForDestination() async{
+
     markers.add(Marker( //add start location marker
       markerId: MarkerId(currLocation.toString()),
       position: currLocation, //position of marker
@@ -85,17 +74,23 @@ class _HomeState extends State<MapScreen> {
       ),
       icon: BitmapDescriptor.defaultMarker, //Icon for Marker
     ));
-    markers.add(Marker( //add distination location marker
-      markerId: MarkerId(endLocation.toString()),
-      position: endLocation, //position of marker
-      infoWindow: const InfoWindow( //popup info
-        title: 'Destination Point ',
-        snippet: 'Destination Marker',
-      ),
-      icon: BitmapDescriptor.defaultMarker, //Icon for Marker
-    ));
-    tooFar.subscribe((args) => leadToDestination());
-    leadToDestination();
+    if (endLocation.latitude != 0 || endLocation.longitude != 0){
+      tooFar.unsubscribe((args) => askForDestination());
+      markers.add(Marker( //add distination location marker
+        markerId: MarkerId(endLocation.toString()),
+        position: endLocation, //position of marker
+        infoWindow: const InfoWindow( //popup info
+          title: 'Destination Point ',
+          snippet: 'Destination Marker',
+        ),
+        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+      ));
+      tooFar.subscribe((args) => leadToDestination());
+      leadToDestination();
+    }
+    else{
+      print("still no destination set");
+    }
   }
   leadToDestination(){
     leading = true;
@@ -241,7 +236,10 @@ class _HomeState extends State<MapScreen> {
                         ),
                       )
                   )
-              )
+              ),
+              SearchPlacesScreen(
+                controller: googleMapController;
+              ),
             ]
         )
     );
