@@ -7,7 +7,7 @@ import 'package:google_api_headers/google_api_headers.dart';
 
 class SearchPlacesScreen extends StatefulWidget {
   const SearchPlacesScreen({Key? key}) : super(key: key);
-  final GoogleMapController controller;
+  //final GoogleMapController controller;
   @override
   State<SearchPlacesScreen> createState() => _SearchPlacesScreenState();
 }

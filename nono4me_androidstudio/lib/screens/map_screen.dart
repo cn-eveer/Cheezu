@@ -238,7 +238,7 @@ class _HomeState extends State<MapScreen> {
                   )
               ),
               SearchPlacesScreen(
-                controller: googleMapController;
+                //controller: googleMapController;
               ),
             ]
         )
