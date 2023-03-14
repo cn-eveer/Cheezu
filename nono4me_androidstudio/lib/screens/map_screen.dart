@@ -102,12 +102,6 @@ class _HomeState extends State<MapScreen> {
   checkLocation() async {
     //print("Checking too far");
     await updateCurrentUserLocation();
-    // PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-    //   googleAPiKey,
-    //   PointLatLng(startLocation.latitude, startLocation.longitude),
-    //   PointLatLng(currLocation.latitude, currLocation.longitude),
-    //   travelMode: TravelMode.walking,
-    // );
     double distanceFromHouse = calculateDistance(
         startLocation.latitude,
         startLocation.longitude,
