@@ -8,6 +8,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:nono4me_androidstudio/screens/search_places_screen.dart';
 
 class MapScreen extends StatefulWidget{
+  //LatLng endLocation = LatLng(35.70613,139.3423);
+  static LatLng endLocation = LatLng(0, 0);
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -23,7 +26,6 @@ class _HomeState extends State<MapScreen> {
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
   LatLng startLocation = LatLng(35.70591, 139.354015);
-  LatLng endLocation = LatLng(35.70613,139.3423);
   //LatLng endLocation = LatLng(0, 0);
   LatLng currLocation = LatLng(0, 0);
   Timer? checkLocationTimer;
@@ -58,14 +60,14 @@ class _HomeState extends State<MapScreen> {
 
   switchLocations(){
     var a = startLocation;
-    startLocation = endLocation;
-    endLocation = a;
+    startLocation = MapScreen.endLocation;
+    MapScreen.endLocation = a;
     print("Setting course back for home");
     leadToDestination();
   }
 
   askForDestination() async{
-
+    print("asking for destination");
     markers.add(Marker( //add start location marker
       markerId: MarkerId(currLocation.toString()),
       position: currLocation, //position of marker
@@ -75,11 +77,11 @@ class _HomeState extends State<MapScreen> {
       ),
       icon: BitmapDescriptor.defaultMarker, //Icon for Marker
     ));
-    if (endLocation.latitude != 0 || endLocation.longitude != 0){
+    if (MapScreen.endLocation.latitude != 0 || MapScreen.endLocation.longitude != 0){
       tooFar.unsubscribe((args) => askForDestination());
       markers.add(Marker( //add distination location marker
-        markerId: MarkerId(endLocation.toString()),
-        position: endLocation, //position of marker
+        markerId: MarkerId(MapScreen.endLocation.toString()),
+        position: MapScreen.endLocation, //position of marker
         infoWindow: const InfoWindow( //popup info
           title: 'Destination Point ',
           snippet: 'Destination Marker',
@@ -110,8 +112,8 @@ class _HomeState extends State<MapScreen> {
     double distanceToDestination = calculateDistance(
         currLocation.latitude,
         currLocation.longitude,
-        endLocation.latitude,
-        endLocation.longitude) * 1000;
+        MapScreen.endLocation.latitude,
+        MapScreen.endLocation.longitude) * 1000;
     //print(distanceToDestination);
     if (leading){
       print(distanceToDestination);
@@ -140,7 +142,7 @@ class _HomeState extends State<MapScreen> {
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleAPiKey,
       PointLatLng(currLocation.latitude, currLocation.longitude),
-      PointLatLng(endLocation.latitude, endLocation.longitude),
+      PointLatLng(MapScreen.endLocation.latitude, MapScreen.endLocation.longitude),
       travelMode: TravelMode.walking,
     );
 

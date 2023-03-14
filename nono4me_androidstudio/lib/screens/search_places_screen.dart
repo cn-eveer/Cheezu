@@ -4,6 +4,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
+import 'package:nono4me_androidstudio/screens/map_screen.dart';
 
 
 class SearchPlacesScreen extends StatefulWidget {
@@ -78,6 +79,10 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
 
     final lat = detail.result.geometry!.location.lat;
     final lng = detail.result.geometry!.location.lng;
+
+    MapScreen.endLocation = LatLng(lat, lng);
+    print(MapScreen.endLocation);
+    print("Updated end location aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
     markersList.clear();
     markersList.add(Marker(markerId: const MarkerId("0"),position: LatLng(lat, lng),infoWindow: InfoWindow(title: detail.result.name)));
