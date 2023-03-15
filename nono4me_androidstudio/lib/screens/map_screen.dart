@@ -102,7 +102,7 @@ class _HomeState extends State<MapScreen> {
   }
 
   notifyToSelectDestination(){
-    
+
   }
 
   checkLocation() async {
