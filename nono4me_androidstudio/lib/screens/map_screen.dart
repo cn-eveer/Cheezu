@@ -101,6 +101,10 @@ class _HomeState extends State<MapScreen> {
     getDirections(); //fetch direction polylines from Google API
   }
 
+  notifyToSelectDestination(){
+    
+  }
+
   checkLocation() async {
     //print("Checking too far");
     await updateCurrentUserLocation();
