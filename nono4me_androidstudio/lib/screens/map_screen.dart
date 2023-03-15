@@ -7,6 +7,7 @@ import 'package:event/event.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nono4me_androidstudio/screens/search_places_screen.dart';
 
+
 class MapScreen extends StatefulWidget{
   //LatLng endLocation = LatLng(35.70613,139.3423);
   static LatLng endLocation = LatLng(0, 0);
