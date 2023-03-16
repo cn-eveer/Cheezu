@@ -82,7 +82,6 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
 
     MapScreen.endLocation = LatLng(lat, lng);
     print(MapScreen.endLocation);
-    print("Updated end location aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
     markersList.clear();
     markersList.add(Marker(markerId: const MarkerId("0"),position: LatLng(lat, lng),infoWindow: InfoWindow(title: detail.result.name)));
