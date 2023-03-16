@@ -35,7 +35,6 @@ class _HomeState extends State<MapScreen> {
   var arrived = Event();
   bool leading = false;
   bool goingHome = false;
-
   double distance = 0.0;
 
 
