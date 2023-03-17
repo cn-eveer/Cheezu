@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nono4me_androidstudio/screens/map_screen.dart';
+import 'package:nono4me_androidstudio/garbage/profileview.dart';
 
 
 void main() {
