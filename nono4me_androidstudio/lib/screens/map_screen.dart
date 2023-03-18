@@ -37,6 +37,8 @@ class _HomeState extends State<MapScreen> {
   bool goingHome = false;
   double distance = 0.0;
 
+  LatLng oldEndLocation = MapScreen.endLocation;
+
 
   @override
   void initState() {
@@ -47,7 +49,7 @@ class _HomeState extends State<MapScreen> {
     super.initState();
   }
 
-  updateCurrentUserLocation() async {
+  updateLocations() async {
     await Geolocator.requestPermission().then((value){
     }).onError((error, stackTrace) async {
       await Geolocator.requestPermission();
@@ -55,7 +57,28 @@ class _HomeState extends State<MapScreen> {
     });
     var pos = await Geolocator.getCurrentPosition();
     currLocation = LatLng(pos.latitude, pos.longitude);
-    print(currLocation);
+
+    if (leading && oldEndLocation != MapScreen.endLocation){
+      markers.add(Marker( //add distination location marker
+        markerId: MarkerId(MapScreen.endLocation.toString()),
+        position: MapScreen.endLocation, //position of marker
+        infoWindow: const InfoWindow( //popup info
+          title: 'Destination Point ',
+          snippet: 'Destination Marker',
+        ),
+        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+      ));
+      markers.remove(Marker( //add distination location marker
+        markerId: MarkerId(oldEndLocation.toString()),
+        position: oldEndLocation, //position of marker
+        infoWindow: const InfoWindow( //popup info
+          title: 'Destination Point ',
+          snippet: 'Destination Marker',
+        ),
+        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+      ));
+      oldEndLocation = MapScreen.endLocation;
+    }
   }
 
   switchLocations(){
@@ -107,7 +130,7 @@ class _HomeState extends State<MapScreen> {
 
   checkLocation() async {
     //print("Checking too far");
-    await updateCurrentUserLocation();
+    await updateLocations();
     double distanceFromHouse = calculateDistance(
         startLocation.latitude,
         startLocation.longitude,
