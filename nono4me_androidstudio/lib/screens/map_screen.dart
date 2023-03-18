@@ -5,7 +5,7 @@ import 'dart:math';
 import 'dart:async';
 import 'package:event/event.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:nono4me_androidstudio/screens/search_places_screen.dart';
+import 'package:nono4me_androidstudio/screens/search_places_button.dart';
 
 
 class MapScreen extends StatefulWidget{
