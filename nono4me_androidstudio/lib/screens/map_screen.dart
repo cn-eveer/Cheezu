@@ -7,6 +7,7 @@ import 'package:event/event.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nono4me_androidstudio/screens/search_places_button.dart';
 import 'package:nono4me_androidstudio/Utils/notifications_manager.dart';
+import "package:flutter_local_notifications/flutter_local_notifications.dart";
 
 
 class MapScreen extends StatefulWidget{
@@ -38,6 +39,8 @@ class _HomeState extends State<MapScreen> {
   bool goingHome = false;
   double distance = 0.0;
 
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
   LatLng oldEndLocation = MapScreen.endLocation;
 
 
@@ -155,6 +158,7 @@ class _HomeState extends State<MapScreen> {
     if(!leading){
       if (distanceFromHouse > 40){
         print("Oi where the fuck you going");
+        sendNotification("Out for a walk?", "Please specify where you're going");
         tooFar.broadcast();
       }
       else {
@@ -162,6 +166,10 @@ class _HomeState extends State<MapScreen> {
         leading = false;
       }
     }
+  }
+
+  sendNotification(title, body){
+    NotificationsManager.showBigTextNotification(title: title, body: body, fln: flutterLocalNotificationsPlugin);
   }
 
   getDirections() async {
