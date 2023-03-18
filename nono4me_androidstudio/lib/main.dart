@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nono4me_androidstudio/screens/map_screen.dart';
 import 'package:nono4me_androidstudio/garbage/profileview.dart';
+import "package:flutter_local_notifications/flutter_local_notifications.dart";
+import 'package:nono4me_androidstudio/Utils/notifications_manager.dart';
 
 
 void main() {
@@ -23,3 +25,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
