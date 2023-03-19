@@ -9,17 +9,18 @@ class NotificationsManager{
     await flutterLocalNotificationsPlugin.initialize(initializationsSettings );
   }
 
-  static Future showBigTextNotification({var id =0,required String title, required String body,
+  static showBigTextNotification({var id =0,required String title, required String body,
     var payload, required FlutterLocalNotificationsPlugin fln
   } ) async {
     AndroidNotificationDetails androidPlatformChannelSpecifics =
-    const AndroidNotificationDetails('your channel id', 'your channel name',
-        channelDescription: 'your channel description',
+    const AndroidNotificationDetails('too_far_channel', 'too_far_channel',
+        channelDescription: 'too far!',
         importance: Importance.max,
         priority: Priority.high,
         ticker: 'ticker');
 
     var notificationDetails= NotificationDetails(android: androidPlatformChannelSpecifics);
-    await fln.show(0, title, body, notificationDetails);
+    print("Sending notification");
+    fln.show(1, title, body, notificationDetails);
   }
 }
