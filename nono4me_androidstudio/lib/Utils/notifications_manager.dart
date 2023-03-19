@@ -20,7 +20,6 @@ class NotificationsManager{
         ticker: 'ticker');
 
     var notificationDetails= NotificationDetails(android: androidPlatformChannelSpecifics);
-    print("Should be showing notification!!!" + title);
     await fln.show(0, title, body, notificationDetails);
   }
 }
