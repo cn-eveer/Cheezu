@@ -48,6 +48,7 @@ class _HomeState extends State<MapScreen> {
   void initState() {
     checkLocationTimer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
     //simulateMovementTimer = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
+    NotificationsManager.initialize(flutterLocalNotificationsPlugin);
     tooFar.subscribe((args) => askForDestination());
     arrived.subscribe((args) => switchLocations());
     super.initState();

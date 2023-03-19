@@ -5,9 +5,7 @@ import "package:flutter_local_notifications/flutter_local_notifications.dart";
 class NotificationsManager{
   static Future initialize(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
     var androidInitialize = const AndroidInitializationSettings('mipmap/ic_launcher');
-    var iOSInitialize = const IOSInitializationSettings();
-    var initializationsSettings = InitializationSettings(android: androidInitialize,
-        iOS: iOSInitialize);
+    var initializationsSettings = InitializationSettings(android: androidInitialize);
     await flutterLocalNotificationsPlugin.initialize(initializationsSettings );
   }
 
@@ -18,15 +16,12 @@ class NotificationsManager{
     const AndroidNotificationDetails(
       'too_far_channel',
       'too_far_channel',
-      "channel for telling user when he's too far",
       playSound: true,
       importance: Importance.max,
       priority: Priority.high,
     );
 
-    var not= NotificationDetails(android: androidPlatformChannelSpecifics,
-        iOS: IOSNotificationDetails()
-    );
+    var not= NotificationDetails(android: androidPlatformChannelSpecifics);
     await fln.show(0, title, body,not );
   }
 }
