@@ -13,15 +13,14 @@ class NotificationsManager{
     var payload, required FlutterLocalNotificationsPlugin fln
   } ) async {
     AndroidNotificationDetails androidPlatformChannelSpecifics =
-    const AndroidNotificationDetails(
-      'too_far_channel',
-      'too_far_channel',
-      playSound: true,
-      importance: Importance.max,
-      priority: Priority.high,
-    );
+    const AndroidNotificationDetails('your channel id', 'your channel name',
+        channelDescription: 'your channel description',
+        importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker');
 
-    var not= NotificationDetails(android: androidPlatformChannelSpecifics);
-    await fln.show(0, title, body,not );
+    var notificationDetails= NotificationDetails(android: androidPlatformChannelSpecifics);
+    print("Should be showing notification!!!" + title);
+    await fln.show(0, title, body, notificationDetails);
   }
 }

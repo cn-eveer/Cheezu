@@ -33,8 +33,6 @@
             android:value="2" />
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyCNnT3fExXiDeRkiojMLWrKHYSGrgcqgdY"/>
-       <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id"
-           android:value="too_far_channel"/>
    </application>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
