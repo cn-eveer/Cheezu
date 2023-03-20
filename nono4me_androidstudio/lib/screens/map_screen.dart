@@ -49,6 +49,8 @@ class _HomeState extends State<MapScreen> {
     checkLocationTimer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
     //simulateMovementTimer = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
     NotificationsManager.initialize(flutterLocalNotificationsPlugin);
+    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
     tooFar.subscribe((args) => askForDestination());
     arrived.subscribe((args) => switchLocations());
     super.initState();
@@ -96,6 +98,7 @@ class _HomeState extends State<MapScreen> {
 
   askForDestination() async{
     print("asking for destination");
+
     markers.add(Marker( //add start location marker
       markerId: MarkerId(currLocation.toString()),
       position: currLocation, //position of marker

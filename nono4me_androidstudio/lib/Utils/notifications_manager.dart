@@ -1,10 +1,8 @@
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
 
-
-
 class NotificationsManager{
   static Future initialize(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
-    var androidInitialize = const AndroidInitializationSettings('mipmap/ic_launcher');
+    var androidInitialize = const AndroidInitializationSettings('@drawable/ic_stat_add_location_alt');
     var initializationsSettings = InitializationSettings(android: androidInitialize);
     await flutterLocalNotificationsPlugin.initialize(initializationsSettings );
   }
@@ -19,8 +17,9 @@ class NotificationsManager{
         priority: Priority.high,
         ticker: 'ticker');
 
+
     var notificationDetails= NotificationDetails(android: androidPlatformChannelSpecifics);
-    print("Sending notification");
-    fln.show(1, title, body, notificationDetails);
+    print("Sending notification "+ title);
+    fln.show(1, title, body, notificationDetails, payload: "Hi");
   }
 }
