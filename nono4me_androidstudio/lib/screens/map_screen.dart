@@ -64,7 +64,7 @@ class _HomeState extends State<MapScreen> {
       await Geolocator.requestPermission();
       print("ERROR"+error.toString());
     });
-    var pos = await Geolocator.getCurrentPosition();
+    var pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     currLocation = LatLng(pos.latitude, pos.longitude);
 
     if (leading && oldEndLocation != MapScreen.endLocation){
