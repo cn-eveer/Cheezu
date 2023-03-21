@@ -66,17 +66,17 @@ class _HomeState extends State<MapScreen> {
     tooFarEvent.subscribe((args) => askForDestination());
     arrived.subscribe((args) => switchLocations());
 
-    // Workmanager().initialize(
-    //   callbackDispatcher,
-    //   isInDebugMode: true,
-    // );
-    //
-    // Workmanager().registerPeriodicTask(
-    //   "1",
-    //   fetchBackground,
-    //   frequency: const Duration(seconds: 2),
-    // );
-    // super.initState();
+    Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: true,
+    );
+
+    Workmanager().registerPeriodicTask(
+      "1",
+      fetchBackground,
+      frequency: const Duration(seconds: 2),
+    );
+    super.initState();
   }
 
   void callbackDispatcher() {
