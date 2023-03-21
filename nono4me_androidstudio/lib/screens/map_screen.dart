@@ -5,6 +5,7 @@ import 'dart:math';
 import 'dart:async';
 import 'package:event/event.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:workmanager/workmanager.dart';
 import 'package:nono4me_androidstudio/screens/search_places_button.dart';
 import 'package:nono4me_androidstudio/Utils/notifications_manager.dart';
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
@@ -39,6 +40,7 @@ class _HomeState extends State<MapScreen> {
   bool leading = false;
   bool goingHome = false;
   double distance = 0.0;
+  static const fetchBackground = "fetchBackground";
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
@@ -50,20 +52,48 @@ class _HomeState extends State<MapScreen> {
     checkLocationTimer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
     notificationTimer = Timer.periodic(Duration(seconds: 10), (Timer t) => sendNotification("Out for a walk?", "Please specify where you're going"));
     //simulateMovementTimer = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
+
     NotificationsManager.initialize(flutterLocalNotificationsPlugin);
     flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
-    tooFarEvent.subscribe((args) => askForDestination());
-    arrived.subscribe((args) => switchLocations());
-    super.initState();
-  }
 
-  updateLocations() async {
-    await Geolocator.requestPermission().then((value){
+    Geolocator.requestPermission().then((value){
     }).onError((error, stackTrace) async {
       await Geolocator.requestPermission();
       print("ERROR"+error.toString());
     });
+
+    tooFarEvent.subscribe((args) => askForDestination());
+    arrived.subscribe((args) => switchLocations());
+
+    // Workmanager().initialize(
+    //   callbackDispatcher,
+    //   isInDebugMode: true,
+    // );
+    //
+    // Workmanager().registerPeriodicTask(
+    //   "1",
+    //   fetchBackground,
+    //   frequency: const Duration(seconds: 2),
+    // );
+    // super.initState();
+  }
+
+  void callbackDispatcher() {
+    Workmanager().executeTask((task, inputData) async {
+      switch (task) {
+        case fetchBackground:
+          Position userLocation = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+          print(userLocation);
+          print("background geolocator working!!!!");
+          break;
+      }
+      return Future.value(true);
+    });
+  }
+
+  updateLocations() async {
+
     var pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     currLocation = LatLng(pos.latitude, pos.longitude);
 
