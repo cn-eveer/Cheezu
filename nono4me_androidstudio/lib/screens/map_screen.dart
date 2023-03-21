@@ -31,7 +31,7 @@ class _HomeState extends State<MapScreen> {
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
   LatLng startLocation = LatLng(35.70591, 139.354015);
   //LatLng endLocation = LatLng(0, 0);
-  LatLng currLocation = LatLng(0, 0);
+  static LatLng currLocation = LatLng(0, 0);
   Timer? checkLocationTimer;
   Timer? notificationTimer;
   var tooFarEvent = Event();
@@ -66,26 +66,29 @@ class _HomeState extends State<MapScreen> {
     tooFarEvent.subscribe((args) => askForDestination());
     arrived.subscribe((args) => switchLocations());
 
+
     Workmanager().initialize(
       callbackDispatcher,
       isInDebugMode: true,
     );
 
     Workmanager().registerPeriodicTask(
-      "1",
+      fetchBackground,
       fetchBackground,
       frequency: const Duration(seconds: 2),
     );
     super.initState();
   }
 
-  void callbackDispatcher() {
+  @pragma(
+      'vm:entry-point')
+  static void callbackDispatcher() {
     Workmanager().executeTask((task, inputData) async {
       switch (task) {
         case fetchBackground:
           Position userLocation = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-          print(userLocation);
-          print("background geolocator working!!!!");
+          currLocation=LatLng(userLocation.latitude, userLocation.longitude);
+          print(currLocation);
           break;
       }
       return Future.value(true);
@@ -197,7 +200,9 @@ class _HomeState extends State<MapScreen> {
       }
       else {
         print("Still around house");
+        print(currLocation);
         leading = false;
+        tooFarFromHouse=false;
       }
     }
   }
