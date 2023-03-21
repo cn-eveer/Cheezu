@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:event/event.dart';
+import "package:carp_background_location/carp_background_location.dart";
 import 'package:nono4me_androidstudio/screens/search_places_button.dart';
 import 'package:nono4me_androidstudio/Utils/notifications_manager.dart';
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
@@ -49,11 +50,21 @@ class _HomeState extends State<MapScreen> {
     checkLocationTimer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
     notificationTimer = Timer.periodic(Duration(seconds: 10), (Timer t) => sendNotification("Out for a walk?", "Please specify where you're going"));
     //simulateMovementTimer = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
+
     NotificationsManager.initialize(flutterLocalNotificationsPlugin);
     flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
+
     tooFarEvent.subscribe((args) => askForDestination());
     arrived.subscribe((args) => switchLocations());
+
+    LocationManager().interval = 1;
+    LocationManager().distanceFilter = 0;
+    LocationManager().notificationTitle = 'CARP Location Example';
+    LocationManager().notificationMsg = 'CARP is tracking your location';
+    StreamSubscription<LocationDto> locationSubscription = LocationManager()
+        .locationStream
+        .listen((LocationDto dto) => print(dto));
     super.initState();
   }
 
@@ -64,7 +75,10 @@ class _HomeState extends State<MapScreen> {
     //   print("ERROR"+error.toString());
     // });
     //var pos = await Geolocator.getCurrentPosition();
-    var pos = currLocation;
+
+    var pos = await LocationManager().getCurrentLocation();
+    print(pos);
+    print("location manager works");
     currLocation = LatLng(pos.latitude, pos.longitude);
 
     if (leading && oldEndLocation != MapScreen.endLocation){
