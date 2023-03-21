@@ -134,10 +134,10 @@ class _HomeState extends State<MapScreen> {
   askForDestination() async{
     print("asking for destination");
     markers.add(Marker( //add start location marker
-      markerId: MarkerId(currLocation.toString()),
-      position: currLocation, //position of marker
+      markerId: MarkerId(startLocation.toString()),
+      position: startLocation, //position of marker
       infoWindow: const InfoWindow( //popup info
-        title: 'Starting Point ',
+        title: 'Home ',
         snippet: 'Start Marker',
       ),
       icon: BitmapDescriptor.defaultMarker, //Icon for Marker
