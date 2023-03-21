@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.9"
+  background_locator:
+    dependency: transitive
+    description:
+      name: background_locator
+      sha256: dcc4cbe955282979460f9aadd40f4875a6bd0440a1aa47b10ab0950101248ba5
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.12"
   boolean_selector:
     dependency: transitive
     description:
@@ -33,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  carp_background_location:
+    dependency: "direct main"
+    description:
+      name: carp_background_location
+      sha256: "2275ebbde2d979c5190b721efa1d12dbca5553ae746f4d382e82c6c5fc7e1ce9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   characters:
     dependency: transitive
     description:

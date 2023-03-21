@@ -4,7 +4,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:event/event.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:nono4me_androidstudio/screens/search_places_button.dart';
 import 'package:nono4me_androidstudio/Utils/notifications_manager.dart';
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
@@ -48,7 +47,7 @@ class _HomeState extends State<MapScreen> {
   @override
   void initState() {
     checkLocationTimer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
-    notificationTimer = Timer.periodic(Duration(seconds: 5), (Timer t) => sendNotification("Out for a walk?", "Please specify where you're going"));
+    notificationTimer = Timer.periodic(Duration(seconds: 10), (Timer t) => sendNotification("Out for a walk?", "Please specify where you're going"));
     //simulateMovementTimer = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
     NotificationsManager.initialize(flutterLocalNotificationsPlugin);
     flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
@@ -59,12 +58,13 @@ class _HomeState extends State<MapScreen> {
   }
 
   updateLocations() async {
-    await Geolocator.requestPermission().then((value){
-    }).onError((error, stackTrace) async {
-      await Geolocator.requestPermission();
-      print("ERROR"+error.toString());
-    });
-    var pos = await Geolocator.getCurrentPosition();
+    // await Geolocator.requestPermission().then((value){
+    // }).onError((error, stackTrace) async {
+    //   await Geolocator.requestPermission();
+    //   print("ERROR"+error.toString());
+    // });
+    //var pos = await Geolocator.getCurrentPosition();
+    var pos = currLocation;
     currLocation = LatLng(pos.latitude, pos.longitude);
 
     if (leading && oldEndLocation != MapScreen.endLocation){
