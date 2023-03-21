@@ -32,9 +32,10 @@ class _HomeState extends State<MapScreen> {
   //LatLng endLocation = LatLng(0, 0);
   LatLng currLocation = LatLng(0, 0);
   Timer? checkLocationTimer;
-  //Timer? simulateMovementTimer;
-  var tooFar = Event();
+  Timer? notificationTimer;
+  var tooFarEvent = Event();
   var arrived = Event();
+  bool tooFarFromHouse = false;
   bool leading = false;
   bool goingHome = false;
   double distance = 0.0;
@@ -47,11 +48,12 @@ class _HomeState extends State<MapScreen> {
   @override
   void initState() {
     checkLocationTimer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
+    notificationTimer = Timer.periodic(Duration(seconds: 5), (Timer t) => sendNotification("Out for a walk?", "Please specify where you're going"));
     //simulateMovementTimer = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
     NotificationsManager.initialize(flutterLocalNotificationsPlugin);
     flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
-    tooFar.subscribe((args) => askForDestination());
+    tooFarEvent.subscribe((args) => askForDestination());
     arrived.subscribe((args) => switchLocations());
     super.initState();
   }
@@ -98,7 +100,6 @@ class _HomeState extends State<MapScreen> {
 
   askForDestination() async{
     print("asking for destination");
-
     markers.add(Marker( //add start location marker
       markerId: MarkerId(currLocation.toString()),
       position: currLocation, //position of marker
@@ -109,7 +110,7 @@ class _HomeState extends State<MapScreen> {
       icon: BitmapDescriptor.defaultMarker, //Icon for Marker
     ));
     if (MapScreen.endLocation.latitude != 0 || MapScreen.endLocation.longitude != 0){
-      tooFar.unsubscribe((args) => askForDestination());
+      tooFarEvent.unsubscribe((args) => askForDestination());
       markers.add(Marker( //add distination location marker
         markerId: MarkerId(MapScreen.endLocation.toString()),
         position: MapScreen.endLocation, //position of marker
@@ -119,7 +120,7 @@ class _HomeState extends State<MapScreen> {
         ),
         icon: BitmapDescriptor.defaultMarker, //Icon for Marker
       ));
-      tooFar.subscribe((args) => leadToDestination());
+      tooFarEvent.subscribe((args) => leadToDestination());
       leadToDestination();
     }
     else{
@@ -130,10 +131,6 @@ class _HomeState extends State<MapScreen> {
     leading = true;
     print("leading to destination");
     getDirections(); //fetch direction polylines from Google API
-  }
-
-  notifyToSelectDestination(){
-
   }
 
   checkLocation() async {
@@ -156,14 +153,17 @@ class _HomeState extends State<MapScreen> {
         print("You have arrived");
         goingHome=!goingHome;
         arrived.broadcast();
+        if(goingHome){
+          leading=false;
+        }
       }
       leadToDestination();
     }
     if(!leading){
       if (distanceFromHouse > 40){
         print("Oi where the fuck you going");
-        sendNotification("Out for a walk?", "Please specify where you're going");
-        tooFar.broadcast();
+        tooFarEvent.broadcast();
+        tooFarFromHouse = true;
       }
       else {
         print("Still around house");
@@ -173,7 +173,9 @@ class _HomeState extends State<MapScreen> {
   }
 
   sendNotification(title, body){
-    NotificationsManager.showBigTextNotification(title: title, body: body, fln: flutterLocalNotificationsPlugin);
+    if(tooFarFromHouse && !leading){
+      NotificationsManager.showBigTextNotification(title: title, body: body, fln: flutterLocalNotificationsPlugin);
+    }
   }
 
   getDirections() async {
