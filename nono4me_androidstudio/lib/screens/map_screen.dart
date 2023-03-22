@@ -56,47 +56,9 @@ class _HomeState extends State<MapScreen> {
     flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
 
-    Geolocator.requestPermission().then((value){
-    }).onError((error, stackTrace) async {
-      await Geolocator.requestPermission();
-      print("ERROR"+error.toString());
-    });
-
     tooFarEvent.subscribe((args) => askForDestination());
     arrived.subscribe((args) => switchLocations());
-
-
-    Workmanager().initialize(
-      callbackDispatcher,
-      isInDebugMode: true,
-    );
-
-    Workmanager().registerPeriodicTask(
-      fetchBackground,
-      fetchBackground,
-      frequency: const Duration(seconds: 2),
-    );
-    Workmanager().registerOneOffTask(testTask, testTask);
     super.initState();
-  }
-
-  @pragma(
-      'vm:entry-point')
-  static void callbackDispatcher() {
-    Workmanager().executeTask((task, inputData) async {
-
-      switch (task) {
-        case fetchBackground:
-          Position userLocation = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-          MapScreen.currLocation=LatLng(userLocation.latitude, userLocation.longitude);
-          print(MapScreen.currLocation);
-          break;
-        case testTask:
-          print("wooo it works!!!");
-          break;
-      }
-      return Future.value(true);
-    });
   }
 
   updateLocations() async {
