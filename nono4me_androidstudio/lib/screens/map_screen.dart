@@ -14,7 +14,7 @@ import "package:flutter_local_notifications/flutter_local_notifications.dart";
 class MapScreen extends StatefulWidget{
   //LatLng endLocation = LatLng(35.70613,139.3423);
   static LatLng endLocation = LatLng(0, 0);
-
+  static LatLng currLocation = LatLng(0, 0);
   @override
   _HomeState createState() => _HomeState();
 }
@@ -23,15 +23,13 @@ class _HomeState extends State<MapScreen> {
 
   GoogleMapController? googleMapController; //contrller for Google map
   PolylinePoints polylinePoints = PolylinePoints();
-
   String googleAPiKey = "AIzaSyCNnT3fExXiDeRkiojMLWrKHYSGrgcqgdY";
-
   Set<Marker> markers = Set(); //markers for google map
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
   LatLng startLocation = LatLng(35.70591, 139.354015);
   //LatLng endLocation = LatLng(0, 0);
-  static LatLng currLocation = LatLng(0, 0);
+
   Timer? checkLocationTimer;
   Timer? notificationTimer;
   var tooFarEvent = Event();
@@ -41,6 +39,7 @@ class _HomeState extends State<MapScreen> {
   bool goingHome = false;
   double distance = 0.0;
   static const fetchBackground = "fetchBackground";
+  static const testTask = "testTask";
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
@@ -77,6 +76,7 @@ class _HomeState extends State<MapScreen> {
       fetchBackground,
       frequency: const Duration(seconds: 2),
     );
+    Workmanager().registerOneOffTask(testTask, testTask);
     super.initState();
   }
 
@@ -84,11 +84,15 @@ class _HomeState extends State<MapScreen> {
       'vm:entry-point')
   static void callbackDispatcher() {
     Workmanager().executeTask((task, inputData) async {
+
       switch (task) {
         case fetchBackground:
           Position userLocation = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-          currLocation=LatLng(userLocation.latitude, userLocation.longitude);
-          print(currLocation);
+          MapScreen.currLocation=LatLng(userLocation.latitude, userLocation.longitude);
+          print(MapScreen.currLocation);
+          break;
+        case testTask:
+          print("wooo it works!!!");
           break;
       }
       return Future.value(true);
@@ -98,7 +102,7 @@ class _HomeState extends State<MapScreen> {
   updateLocations() async {
 
     var pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    currLocation = LatLng(pos.latitude, pos.longitude);
+    MapScreen.currLocation = LatLng(pos.latitude, pos.longitude);
 
     if (leading && oldEndLocation != MapScreen.endLocation){
       markers.add(Marker( //add distination location marker
@@ -172,11 +176,11 @@ class _HomeState extends State<MapScreen> {
     double distanceFromHouse = calculateDistance(
         startLocation.latitude,
         startLocation.longitude,
-        currLocation.latitude,
-        currLocation.longitude) * 1000;
+        MapScreen.currLocation.latitude,
+        MapScreen.currLocation.longitude) * 1000;
     double distanceToDestination = calculateDistance(
-        currLocation.latitude,
-        currLocation.longitude,
+        MapScreen.currLocation.latitude,
+        MapScreen.currLocation.longitude,
         MapScreen.endLocation.latitude,
         MapScreen.endLocation.longitude) * 1000;
     //print(distanceToDestination);
@@ -200,7 +204,7 @@ class _HomeState extends State<MapScreen> {
       }
       else {
         print("Still around house");
-        print(currLocation);
+        print(MapScreen.currLocation);
         leading = false;
         tooFarFromHouse=false;
       }
@@ -218,7 +222,7 @@ class _HomeState extends State<MapScreen> {
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleAPiKey,
-      PointLatLng(currLocation.latitude, currLocation.longitude),
+      PointLatLng(MapScreen.currLocation.latitude, MapScreen.currLocation.longitude),
       PointLatLng(MapScreen.endLocation.latitude, MapScreen.endLocation.longitude),
       travelMode: TravelMode.walking,
     );
