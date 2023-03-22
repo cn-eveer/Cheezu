@@ -5,7 +5,6 @@ import 'dart:math';
 import 'dart:async';
 import 'package:event/event.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:nono4me_androidstudio/screens/search_places_button.dart';
 import 'package:nono4me_androidstudio/Utils/notifications_manager.dart';
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
@@ -38,8 +37,6 @@ class _HomeState extends State<MapScreen> {
   bool leading = false;
   bool goingHome = false;
   double distance = 0.0;
-  static const fetchBackground = "fetchBackground";
-  static const testTask = "testTask";
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
@@ -166,7 +163,6 @@ class _HomeState extends State<MapScreen> {
       }
       else {
         print("Still around house");
-        print(MapScreen.currLocation);
         leading = false;
         tooFarFromHouse=false;
       }

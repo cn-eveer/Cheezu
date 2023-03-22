@@ -18,9 +18,11 @@ void callbackDispatcher() {
 Workmanager().executeTask((task, inputData) async {
     switch (task) {
         case fetchBackground:
+            print("Yeee haw");
             Position userLocation = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
             MapScreen.currLocation=LatLng(userLocation.latitude, userLocation.longitude);
-            print(MapScreen.currLocation);
+            print(MapScreen.currLocation );
+            print("Yeee haw");
         break;
         case testTask:
             print("wooo it works!!!");
@@ -44,7 +46,6 @@ class MyApp extends StatelessWidget {
     Workmanager().registerPeriodicTask(
       fetchBackground,
       fetchBackground,
-      frequency: const Duration(seconds: 2),
     );
     Workmanager().registerOneOffTask(testTask, testTask);
     print("workmanager set up supposedly");
@@ -66,4 +67,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
