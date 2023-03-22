@@ -26,7 +26,7 @@ class _HomeState extends State<MapScreen> {
   Set<Marker> markers = Set(); //markers for google map
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
-  LatLng startLocation = LatLng(35.70591, 139.354015);
+  LatLng startLocation = const LatLng(35.70591, 139.354015);
   //LatLng endLocation = LatLng(0, 0);
 
   Timer? checkLocationTimer;
@@ -45,8 +45,8 @@ class _HomeState extends State<MapScreen> {
 
   @override
   void initState() {
-    checkLocationTimer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkLocation());
-    notificationTimer = Timer.periodic(Duration(seconds: 10), (Timer t) => sendNotification("Out for a walk?", "Please specify where you're going"));
+    checkLocationTimer = Timer.periodic(const Duration(seconds: 2), (Timer t) => checkLocation());
+    notificationTimer = Timer.periodic(const Duration(seconds: 10), (Timer t) => sendNotification("Out for a walk?", "Please specify where you're going"));
     //simulateMovementTimer = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
 
     NotificationsManager.initialize(flutterLocalNotificationsPlugin);
@@ -56,6 +56,14 @@ class _HomeState extends State<MapScreen> {
     tooFarEvent.subscribe((args) => askForDestination());
     arrived.subscribe((args) => switchLocations());
     super.initState();
+  }
+
+  resetEverything(){
+    markers = {};
+    polylinePoints = PolylinePoints();
+    tooFarFromHouse = false;
+    leading=false;
+    goingHome=false;
   }
 
   updateLocations() async {
@@ -213,7 +221,7 @@ class _HomeState extends State<MapScreen> {
   }
 
   addPolyLine(List<LatLng> polylineCoordinates) {
-    PolylineId id = PolylineId("poly");
+    PolylineId id = const PolylineId("poly");
     Polyline polyline = Polyline(
       polylineId: id,
       color: Colors.deepPurpleAccent,
@@ -238,7 +246,7 @@ class _HomeState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return  Scaffold(
         appBar: AppBar(
-          title: Text("Calculate Distance in Google Map"),
+          title: const Text("Calculate Distance in Google Map"),
           backgroundColor: Colors.deepPurpleAccent,
         ),
         body: Stack(
