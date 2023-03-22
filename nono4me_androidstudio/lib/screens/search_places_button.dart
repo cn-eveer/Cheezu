@@ -6,9 +6,9 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:nono4me_androidstudio/screens/map_screen.dart';
 
-
 class SearchPlacesScreen extends StatefulWidget {
-  const SearchPlacesScreen({Key? key, required this.controller}) : super(key: key);
+  const SearchPlacesScreen({Key? key, required this.controller})
+      : super(key: key);
   final GoogleMapController? controller;
   @override
   State<SearchPlacesScreen> createState() => _SearchPlacesScreenState();
@@ -18,18 +18,22 @@ const kGoogleApiKey = 'AIzaSyCNnT3fExXiDeRkiojMLWrKHYSGrgcqgdY';
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
-  static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
+  static const CameraPosition initialCameraPosition =
+      CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
   late GoogleMapController googleMapController = widget.controller!;
 
   final Mode _mode = Mode.overlay;
   @override
-  void initState(){
+  void initState() {
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(onPressed: _handlePressButton, child: const Text("Search Places"));
+    return FloatingActionButton(
+      onPressed: _handlePressButton,
+      child: Icon(Icons.search),
+    );
   }
 
   Future<void> _handlePressButton() async {
@@ -43,15 +47,15 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
         types: [""],
         decoration: InputDecoration(
             hintText: 'Search',
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.white))),
-        components: [Component(Component.country,"jp")]);
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide(color: Colors.white))),
+        components: [Component(Component.country, "jp")]);
 
-
-    displayPrediction(p!,homeScaffoldKey.currentState);
+    displayPrediction(p!, homeScaffoldKey.currentState);
   }
 
-  void onError(PlacesAutocompleteResponse response){
-
+  void onError(PlacesAutocompleteResponse response) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
@@ -66,12 +70,11 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
     // homeScaffoldKey.currentState!.showSnackBar(SnackBar(content: Text(response.errorMessage!)));
   }
 
-  Future<void> displayPrediction(Prediction p, ScaffoldState? currentState) async {
-
+  Future<void> displayPrediction(
+      Prediction p, ScaffoldState? currentState) async {
     GoogleMapsPlaces places = GoogleMapsPlaces(
         apiKey: kGoogleApiKey,
-        apiHeaders: await const GoogleApiHeaders().getHeaders()
-    );
+        apiHeaders: await const GoogleApiHeaders().getHeaders());
 
     PlacesDetailsResponse detail = await places.getDetailsByPlaceId(p.placeId!);
 
@@ -83,7 +86,8 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
 
     setState(() {});
 
-    googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
-
+    googleMapController.animateCamera(
+      CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0),
+    );
   }
 }
