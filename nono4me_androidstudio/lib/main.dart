@@ -4,7 +4,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -12,28 +11,29 @@ void main() {
 const fetchBackground = "fetchBackground";
 const testTask = "testTask";
 
-@pragma(
-    'vm:entry-point')
+@pragma('vm:entry-point')
 void callbackDispatcher() {
-Workmanager().executeTask((task, inputData) async {
+  Workmanager().executeTask((task, inputData) async {
     switch (task) {
-        case fetchBackground:
-            print("Yeee haw");
-            Position userLocation = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-            MapScreen.currLocation=LatLng(userLocation.latitude, userLocation.longitude);
-            print(MapScreen.currLocation );
-            print("Yeee haw");
+      case fetchBackground:
+        print("Yeee haw");
+        Position userLocation = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
+        MapScreen.currLocation =
+            LatLng(userLocation.latitude, userLocation.longitude);
+        print(MapScreen.currLocation);
+        print("Yeee haw");
         break;
-        case testTask:
-            print("wooo it works!!!");
+      case testTask:
+        print("wooo it works!!!");
         break;
     }
     return Future.value(true);
-    });
+  });
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
 
   // This widget is the root of your application.
   @override
@@ -50,10 +50,11 @@ class MyApp extends StatelessWidget {
     Workmanager().registerOneOffTask(testTask, testTask);
     print("workmanager set up supposedly");
 
-    Geolocator.requestPermission().then((value){
-    }).onError((error, stackTrace) async {
+    Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) async {
       await Geolocator.requestPermission();
-      print("ERROR"+error.toString());
+      print("ERROR" + error.toString());
     });
 
     print("geolocator set up supposedly");
@@ -63,7 +64,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MapScreen(),
-
+      debugShowCheckedModeBanner: false,
     );
   }
 }
