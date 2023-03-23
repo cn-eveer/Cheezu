@@ -68,6 +68,10 @@ class _HomeState extends State<MapScreen> {
     tooFarFromHouse = false;
     leading=false;
     goingHome=false;
+    MapScreen.endLocation = LatLng(0, 0);
+    MapScreen.currLocation = LatLng(0, 0);
+    tooFarEvent.unsubscribe((args) => leadToDestination());
+    tooFarEvent.subscribe((args) => askForDestination());
   }
 
   updateLocations() async {
@@ -127,6 +131,8 @@ class _HomeState extends State<MapScreen> {
     ));
     if (MapScreen.endLocation.latitude != 0 ||
         MapScreen.endLocation.longitude != 0) {
+      print("here aa");
+      print(MapScreen.endLocation);
       tooFarEvent.unsubscribe((args) => askForDestination());
       markers.add(Marker(
         //add distination location marker
@@ -140,6 +146,7 @@ class _HomeState extends State<MapScreen> {
         icon: BitmapDescriptor.defaultMarker, //Icon for Marker
       ));
       tooFarEvent.subscribe((args) => leadToDestination());
+      leading = true;
       leadToDestination();
     } else {
       //TODO: Delete
@@ -147,8 +154,8 @@ class _HomeState extends State<MapScreen> {
     }
   }
 
+  //TODO: just use get direction instead
   leadToDestination() {
-    leading = true;
     //TODO: Delete
     print("leading to destination");
     getDirections(); //fetch direction polylines from Google API
@@ -179,6 +186,7 @@ class _HomeState extends State<MapScreen> {
         if (movementCounter>3){
           movementCounter = 0;
           resetEverything();
+          return;
         }
       }
       else{

@@ -81,9 +81,10 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
     final lat = detail.result.geometry!.location.lat;
     final lng = detail.result.geometry!.location.lng;
 
-    MapScreen.endLocation = LatLng(lat, lng);
-    print(MapScreen.endLocation);
+    print(lat);
+    print(lng);
 
+    MapScreen.endLocation = LatLng(lat, lng);
     setState(() {});
 
     googleMapController.animateCamera(
