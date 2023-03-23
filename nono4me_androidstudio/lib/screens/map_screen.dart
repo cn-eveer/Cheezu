@@ -303,7 +303,6 @@ class _HomeState extends State<MapScreen> {
                             " M",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
->>>>>>> 8e8f48edbd86b84e2753d5b253acca38f325926f
                 ),
               ),
             ),
