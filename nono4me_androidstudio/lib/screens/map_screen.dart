@@ -37,6 +37,7 @@ class _HomeState extends State<MapScreen> {
   bool leading = false;
   bool goingHome = false;
   double distance = 0.0;
+  int movementCounter = 0;
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -60,8 +61,10 @@ class _HomeState extends State<MapScreen> {
   }
 
   resetEverything(){
+    print("reset everything");
     markers = {};
     polylinePoints = PolylinePoints();
+    polylines = {};
     tooFarFromHouse = false;
     leading=false;
     goingHome=false;
@@ -158,17 +161,29 @@ class _HomeState extends State<MapScreen> {
             startLocation.latitude,
             startLocation.longitude,
             MapScreen.currLocation.latitude,
-            MapScreen.currLocation.longitude) *
-        1000;
+            MapScreen.currLocation.longitude) * 1000;
     double distanceToDestination = calculateDistance(
             MapScreen.currLocation.latitude,
             MapScreen.currLocation.longitude,
             MapScreen.endLocation.latitude,
-            MapScreen.endLocation.longitude) *
-        1000;
+            MapScreen.endLocation.longitude) * 1000;
     //print(distanceToDestination);
     if (leading) {
+      print("We got here");
       print(distanceToDestination);
+      print(distance*1000);
+      if(distanceToDestination - distance*1000 >= 0){
+        //TODO: Remove
+        print("No progress");
+        movementCounter++;
+        if (movementCounter>3){
+          movementCounter = 0;
+          resetEverything();
+        }
+      }
+      else{
+        movementCounter=0;
+      }
       if (distanceToDestination < 40) {
         //TODO: Delete
         print("You have arrived");
@@ -223,14 +238,18 @@ class _HomeState extends State<MapScreen> {
     }
 
     //polulineCoordinates is the List of longitute and latidtude.
-    double totalDistance = 0;
-    for (var i = 0; i < polylineCoordinates.length - 1; i++) {
-      totalDistance += calculateDistance(
-          polylineCoordinates[i].latitude,
-          polylineCoordinates[i].longitude,
-          polylineCoordinates[i + 1].latitude,
-          polylineCoordinates[i + 1].longitude);
-    }
+    double totalDistance = calculateDistance(
+      MapScreen.currLocation.latitude,
+      MapScreen.currLocation.longitude,
+      MapScreen.endLocation.latitude,
+      MapScreen.endLocation.longitude);
+    // for (var i = 0; i < polylineCoordinates.length - 1; i++) {
+    //   totalDistance += calculateDistance(
+    //       polylineCoordinates[i].latitude,
+    //       polylineCoordinates[i].longitude,
+    //       polylineCoordinates[i + 1].latitude,
+    //       polylineCoordinates[i + 1].longitude);
+    // }
     //TODO: Delete
     print(totalDistance);
 
