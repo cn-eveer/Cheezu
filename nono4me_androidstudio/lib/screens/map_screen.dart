@@ -235,12 +235,12 @@ class _HomeState extends State<MapScreen> {
       print(result.errorMessage);
     }
 
-    //polulineCoordinates is the List of longitute and latidtude.
     double totalDistance = calculateDistance(
       MapScreen.currLocation.latitude,
       MapScreen.currLocation.longitude,
       MapScreen.endLocation.latitude,
       MapScreen.endLocation.longitude);
+    //TODO: convert all distances to this instead of direct distance
     // for (var i = 0; i < polylineCoordinates.length - 1; i++) {
     //   totalDistance += calculateDistance(
     //       polylineCoordinates[i].latitude,
