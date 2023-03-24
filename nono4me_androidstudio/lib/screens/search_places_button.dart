@@ -78,14 +78,16 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
 
     PlacesDetailsResponse detail = await places.getDetailsByPlaceId(p.placeId!);
 
-    final lat = detail.result.geometry!.location.lat;
-    final lng = detail.result.geometry!.location.lng;
+    var lat = detail.result.geometry!.location.lat;
+    var lng = detail.result.geometry!.location.lng;
 
     print(lat);
     print(lng);
 
     MapScreen.endLocation = LatLng(lat, lng);
     setState(() {});
+
+    places=GoogleMapsPlaces();
 
     googleMapController.animateCamera(
       CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0),

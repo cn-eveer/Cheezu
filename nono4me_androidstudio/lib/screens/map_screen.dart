@@ -3,7 +3,6 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math';
 import 'dart:async';
-import 'package:event/event.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nono4me_androidstudio/screens/search_places_button.dart';
 import 'package:nono4me_androidstudio/Utils/notifications_manager.dart';
@@ -31,8 +30,6 @@ class _HomeState extends State<MapScreen> {
 
   Timer? checkLocationTimer;
   Timer? notificationTimer;
-  var tooFarEvent = Event();
-  var arrived = Event();
   bool tooFarFromHouse = false;
   bool leading = false;
   bool goingHome = false;
@@ -54,14 +51,10 @@ class _HomeState extends State<MapScreen> {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestPermission();
-
-    tooFarEvent.subscribe((args) => askForDestination());
-    arrived.subscribe((args) => switchLocations());
     super.initState();
   }
 
   resetEverything(){
-    print("reset everything");
     markers = {};
     polylinePoints = PolylinePoints();
     polylines = {};
@@ -70,8 +63,7 @@ class _HomeState extends State<MapScreen> {
     goingHome=false;
     MapScreen.endLocation = LatLng(0, 0);
     MapScreen.currLocation = LatLng(0, 0);
-    tooFarEvent.unsubscribe((args) => leadToDestination());
-    tooFarEvent.subscribe((args) => askForDestination());
+    print("reset everything");
   }
 
   updateLocations() async {
@@ -133,7 +125,6 @@ class _HomeState extends State<MapScreen> {
         MapScreen.endLocation.longitude != 0) {
       print("here aa");
       print(MapScreen.endLocation);
-      tooFarEvent.unsubscribe((args) => askForDestination());
       markers.add(Marker(
         //add distination location marker
         markerId: MarkerId(MapScreen.endLocation.toString()),
@@ -145,7 +136,6 @@ class _HomeState extends State<MapScreen> {
         ),
         icon: BitmapDescriptor.defaultMarker, //Icon for Marker
       ));
-      tooFarEvent.subscribe((args) => leadToDestination());
       leading = true;
       leadToDestination();
     } else {
@@ -196,7 +186,7 @@ class _HomeState extends State<MapScreen> {
         //TODO: Delete
         print("You have arrived");
         goingHome = !goingHome;
-        arrived.broadcast();
+        switchLocations();
         if (goingHome) {
           leading = false;
         }
@@ -207,7 +197,7 @@ class _HomeState extends State<MapScreen> {
       if (distanceFromHouse > 40) {
         //TODO: Delete
         print("Oi where the fuck you going");
-        tooFarEvent.broadcast();
+        askForDestination();
         tooFarFromHouse = true;
       } else {
         //TODO: Delete
