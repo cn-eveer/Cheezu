@@ -55,15 +55,18 @@ class _HomeState extends State<MapScreen> {
   }
 
   resetEverything(){
-    markers = {};
-    polylinePoints = PolylinePoints();
-    polylines = {};
-    tooFarFromHouse = false;
-    leading=false;
-    goingHome=false;
     MapScreen.endLocation = LatLng(0, 0);
     MapScreen.currLocation = LatLng(0, 0);
+    setState(() {
+      markers = {};
+      polylinePoints = PolylinePoints();
+      polylines = <PolylineId, Polyline>{};
+      tooFarFromHouse = false;
+      leading=false;
+      goingHome=false;
+    });
     print("reset everything");
+
   }
 
   updateLocations() async {
@@ -166,14 +169,11 @@ class _HomeState extends State<MapScreen> {
             MapScreen.endLocation.longitude) * 1000;
     //print(distanceToDestination);
     if (leading) {
-      print("We got here");
-      print(distanceToDestination);
-      print(distance*1000);
       if(distanceToDestination - distance*1000 >= 0){
         //TODO: Remove
         print("No progress");
         movementCounter++;
-        if (movementCounter>300){
+        if (movementCounter>3){
           movementCounter = 0;
           resetEverything();
           return;
@@ -197,6 +197,7 @@ class _HomeState extends State<MapScreen> {
       if (distanceFromHouse > 40) {
         //TODO: Delete
         print("Oi where the fuck you going");
+        print(markers.length);
         askForDestination();
         tooFarFromHouse = true;
       } else {
