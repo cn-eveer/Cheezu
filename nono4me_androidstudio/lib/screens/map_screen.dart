@@ -157,23 +157,19 @@ class _HomeState extends State<MapScreen> {
   checkLocation() async {
     //print("Checking too far");
     await updateLocations();
-    double distanceFromHouse = calculateDistance(
-            startLocation.latitude,
-            startLocation.longitude,
-            MapScreen.currLocation.latitude,
-            MapScreen.currLocation.longitude) * 1000;
-    double distanceToDestination = calculateDistance(
-            MapScreen.currLocation.latitude,
-            MapScreen.currLocation.longitude,
-            MapScreen.endLocation.latitude,
-            MapScreen.endLocation.longitude) * 1000;
+    double distanceFromHouse = await calculateWalkingDistance(
+            startLocation,
+            MapScreen.currLocation) * 1000;
+    double distanceToDestination = await calculateWalkingDistance(
+            MapScreen.currLocation,
+            MapScreen.endLocation) * 1000;
     //print(distanceToDestination);
     if (leading) {
       if(distanceToDestination - distance*1000 >= 0){
         //TODO: Remove
         print("No progress");
         movementCounter++;
-        if (movementCounter>3){
+        if (movementCounter>300){
           movementCounter = 0;
           resetEverything();
           return;
@@ -197,7 +193,6 @@ class _HomeState extends State<MapScreen> {
       if (distanceFromHouse > 40) {
         //TODO: Delete
         print("Oi where the fuck you going");
-        print(markers.length);
         askForDestination();
         tooFarFromHouse = true;
       } else {
@@ -236,19 +231,15 @@ class _HomeState extends State<MapScreen> {
       print(result.errorMessage);
     }
 
-    double totalDistance = calculateDistance(
-      MapScreen.currLocation.latitude,
-      MapScreen.currLocation.longitude,
-      MapScreen.endLocation.latitude,
-      MapScreen.endLocation.longitude);
+    double totalDistance=0;
     //TODO: convert all distances to this instead of direct distance
-    // for (var i = 0; i < polylineCoordinates.length - 1; i++) {
-    //   totalDistance += calculateDistance(
-    //       polylineCoordinates[i].latitude,
-    //       polylineCoordinates[i].longitude,
-    //       polylineCoordinates[i + 1].latitude,
-    //       polylineCoordinates[i + 1].longitude);
-    // }
+    for (var i = 0; i < polylineCoordinates.length - 1; i++) {
+      totalDistance += calculateDistance(
+          polylineCoordinates[i].latitude,
+          polylineCoordinates[i].longitude,
+          polylineCoordinates[i + 1].latitude,
+          polylineCoordinates[i + 1].longitude);
+    }
     //TODO: Delete
     print(totalDistance);
 
@@ -279,6 +270,37 @@ class _HomeState extends State<MapScreen> {
         cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2;
     var result = 12742 * asin(sqrt(a));
     return result;
+  }
+
+  Future<double> calculateWalkingDistance(location1, location2) async{
+    List<LatLng> polylineCoordinates = [];
+
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      googleAPiKey,
+      PointLatLng(
+          location1.latitude, location1.longitude),
+      PointLatLng(
+          location2.latitude, location2.longitude),
+      travelMode: TravelMode.walking,
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    } else {
+      print(result.errorMessage);
+    }
+
+    double totalDistance = 0;
+    for (var i = 0; i < polylineCoordinates.length - 1; i++) {
+      totalDistance += calculateDistance(
+          polylineCoordinates[i].latitude,
+          polylineCoordinates[i].longitude,
+          polylineCoordinates[i + 1].latitude,
+          polylineCoordinates[i + 1].longitude);
+    }
+    return totalDistance;
   }
 
   @override
