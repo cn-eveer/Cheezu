@@ -26,6 +26,7 @@ class _HomeState extends State<MapScreen> {
   static const CameraPosition initialCameraPosition =
       CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
   LatLng startLocation = LatLng(35.70591, 139.354015);
+  PolylineResult resultToDestination = PolylineResult();
   //LatLng endLocation = LatLng(0, 0);
 
   Timer? checkLocationTimer;
@@ -214,25 +215,15 @@ class _HomeState extends State<MapScreen> {
   getDirections() async {
     List<LatLng> polylineCoordinates = [];
 
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      googleAPiKey,
-      PointLatLng(
-          MapScreen.currLocation.latitude, MapScreen.currLocation.longitude),
-      PointLatLng(
-          MapScreen.endLocation.latitude, MapScreen.endLocation.longitude),
-      travelMode: TravelMode.walking,
-    );
-
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
+    if (resultToDestination.points.isNotEmpty) {
+      resultToDestination.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
     } else {
-      print(result.errorMessage);
+      print(resultToDestination.errorMessage);
     }
 
     double totalDistance=0;
-    //TODO: convert all distances to this instead of direct distance
     for (var i = 0; i < polylineCoordinates.length - 1; i++) {
       totalDistance += calculateDistance(
           polylineCoordinates[i].latitude,
@@ -299,6 +290,9 @@ class _HomeState extends State<MapScreen> {
           polylineCoordinates[i].longitude,
           polylineCoordinates[i + 1].latitude,
           polylineCoordinates[i + 1].longitude);
+    }
+    if(location1 == MapScreen.currLocation){
+      resultToDestination = result;
     }
     return totalDistance;
   }
