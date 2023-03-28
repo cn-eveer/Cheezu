@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nono4me_androidstudio/screens/map_screen.dart';
+import 'package:nono4me_androidstudio/screens/map_screen_caretaker.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -89,7 +90,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         MaterialPageRoute(builder: (context) => MapScreen()),
                       );
                     } else if (nameController.text == "Marcy" &&
-                        passwordController.text == "Marcy") {}
+                        passwordController.text == "Marcy") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CaretakerScreen()),
+                      );
+                    }
                   },
                 )),
           ],

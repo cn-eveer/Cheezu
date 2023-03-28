@@ -12,6 +12,7 @@ class MapScreen extends StatefulWidget {
   //LatLng endLocation = LatLng(35.70613,139.3423);
   static LatLng endLocation = LatLng(0, 0);
   static LatLng currLocation = LatLng(0, 0);
+  static bool offPath = false;
   @override
   _HomeState createState() => _HomeState();
 }
@@ -62,6 +63,7 @@ class _HomeState extends State<MapScreen> {
   resetEverything() {
     MapScreen.endLocation = LatLng(0, 0);
     MapScreen.currLocation = LatLng(0, 0);
+    MapScreen.offPath = true;
     setState(() {
       markers = {};
       polylinePoints = PolylinePoints();
