@@ -43,8 +43,12 @@ class _HomeState extends State<MapScreen> {
 
   @override
   void initState() {
-    checkLocationTimer = Timer.periodic(const Duration(seconds: 2), (Timer t) => checkLocation());
-    notificationTimer = Timer.periodic(const Duration(seconds: 10), (Timer t) => sendNotification("Out for a walk?", "Please specify where you're going"));
+    checkLocationTimer = Timer.periodic(
+        const Duration(seconds: 2), (Timer t) => checkLocation());
+    notificationTimer = Timer.periodic(
+        const Duration(seconds: 10),
+        (Timer t) => sendNotification(
+            "Out for a walk?", "Please specify where you're going"));
     //simulateMovementTimer = Timer.periodic(Duration(seconds: 4), (Timer t) => simulateMovement());
 
     NotificationsManager.initialize(flutterLocalNotificationsPlugin);
@@ -55,7 +59,7 @@ class _HomeState extends State<MapScreen> {
     super.initState();
   }
 
-  resetEverything(){
+  resetEverything() {
     MapScreen.endLocation = LatLng(0, 0);
     MapScreen.currLocation = LatLng(0, 0);
     setState(() {
@@ -63,11 +67,10 @@ class _HomeState extends State<MapScreen> {
       polylinePoints = PolylinePoints();
       polylines = <PolylineId, Polyline>{};
       tooFarFromHouse = false;
-      leading=false;
-      goingHome=false;
+      leading = false;
+      goingHome = false;
     });
     print("reset everything");
-
   }
 
   updateLocations() async {
@@ -158,26 +161,25 @@ class _HomeState extends State<MapScreen> {
   checkLocation() async {
     //print("Checking too far");
     await updateLocations();
-    double distanceFromHouse = await calculateWalkingDistance(
-            startLocation,
-            MapScreen.currLocation) * 1000;
+    double distanceFromHouse =
+        await calculateWalkingDistance(startLocation, MapScreen.currLocation) *
+            1000;
     double distanceToDestination = await calculateWalkingDistance(
-            MapScreen.currLocation,
-            MapScreen.endLocation) * 1000;
+            MapScreen.currLocation, MapScreen.endLocation) *
+        1000;
     //print(distanceToDestination);
     if (leading) {
-      if(distanceToDestination - distance*1000 >= 0){
+      if (distanceToDestination - distance * 1000 >= 0) {
         //TODO: Remove
         print("No progress");
         movementCounter++;
-        if (movementCounter>300){
+        if (movementCounter > 300) {
           movementCounter = 0;
           resetEverything();
           return;
         }
-      }
-      else{
-        movementCounter=0;
+      } else {
+        movementCounter = 0;
       }
       if (distanceToDestination < 40) {
         //TODO: Delete
@@ -223,7 +225,7 @@ class _HomeState extends State<MapScreen> {
       print(resultToDestination.errorMessage);
     }
 
-    double totalDistance=0;
+    double totalDistance = 0;
     for (var i = 0; i < polylineCoordinates.length - 1; i++) {
       totalDistance += calculateDistance(
           polylineCoordinates[i].latitude,
@@ -263,15 +265,13 @@ class _HomeState extends State<MapScreen> {
     return result;
   }
 
-  Future<double> calculateWalkingDistance(location1, location2) async{
+  Future<double> calculateWalkingDistance(location1, location2) async {
     List<LatLng> polylineCoordinates = [];
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleAPiKey,
-      PointLatLng(
-          location1.latitude, location1.longitude),
-      PointLatLng(
-          location2.latitude, location2.longitude),
+      PointLatLng(location1.latitude, location1.longitude),
+      PointLatLng(location2.latitude, location2.longitude),
       travelMode: TravelMode.walking,
     );
 
@@ -291,7 +291,7 @@ class _HomeState extends State<MapScreen> {
           polylineCoordinates[i + 1].latitude,
           polylineCoordinates[i + 1].longitude);
     }
-    if(location1 == MapScreen.currLocation){
+    if (location1 == MapScreen.currLocation) {
       resultToDestination = result;
     }
     return totalDistance;

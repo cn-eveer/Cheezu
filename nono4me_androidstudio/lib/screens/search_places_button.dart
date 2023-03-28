@@ -87,7 +87,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
     MapScreen.endLocation = LatLng(lat, lng);
     setState(() {});
 
-    places=GoogleMapsPlaces();
+    places = GoogleMapsPlaces();
 
     googleMapController.animateCamera(
       CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0),
