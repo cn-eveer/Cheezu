@@ -82,17 +82,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     print(nameController.text);
                     print(passwordController.text);
 
-                    if(nameController.text == "Jeff" &&
-                        passwordController.text == "Jeff"){
-
-                    }
-                    else if(nameController.text == "Marcy" &&
-                        passwordController.text == "Marcy") {
-
-                    }
+                    if (nameController.text == "Jeff" &&
+                        passwordController.text == "Jeff") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MapScreen()),
+                      );
+                    } else if (nameController.text == "Marcy" &&
+                        passwordController.text == "Marcy") {}
                   },
-                )
-            ),
+                )),
           ],
         ));
   }
