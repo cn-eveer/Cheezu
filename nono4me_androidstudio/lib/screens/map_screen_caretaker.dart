@@ -78,9 +78,11 @@ class _HomeState extends State<CaretakerScreen> {
         ),
         icon: BitmapDescriptor.defaultMarker, //Icon for Marker
       ));
+      setState(() {
+
+      });
     }
   }
-
 
   sendNotification(title, body) {
     if (tooFarFromHouse && !leading) {
