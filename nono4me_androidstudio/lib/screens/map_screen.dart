@@ -351,6 +351,14 @@ class _HomeState extends State<MapScreen> {
                 controller: googleMapController,
               ),
             ),
+            Container(
+              alignment: Alignment.topLeft,
+              padding: const EdgeInsets.only(top: 10, left: 5),
+              child: FloatingActionButton(
+                onPressed: () => {Navigator.pop(context)},
+                child: Icon(Icons.arrow_back),
+              ),
+            ),
           ],
         ),
       ),

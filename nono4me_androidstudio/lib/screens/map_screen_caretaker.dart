@@ -23,7 +23,7 @@ class _HomeState extends State<CaretakerScreen> {
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
 
   static const CameraPosition initialCameraPosition =
-  CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
+      CameraPosition(target: LatLng(35.70591, 139.354015), zoom: 14.0);
   LatLng startLocation = LatLng(35.70591, 139.354015);
   PolylineResult resultToDestination = PolylineResult();
   //LatLng endLocation = LatLng(0, 0);
@@ -37,7 +37,7 @@ class _HomeState extends State<CaretakerScreen> {
   int movementCounter = 0;
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
   LatLng oldEndLocation = CaretakerScreen.endLocation;
 
   @override
@@ -49,13 +49,13 @@ class _HomeState extends State<CaretakerScreen> {
     NotificationsManager.initialize(flutterLocalNotificationsPlugin);
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.requestPermission();
     super.initState();
   }
 
-  checkLocation(){
-    if(MapScreen.offPath){
+  checkLocation() {
+    if (MapScreen.offPath) {
       markers.add(Marker(
         //add distination location marker
         markerId: MarkerId(MapScreen.endLocation.toString()),
@@ -78,9 +78,7 @@ class _HomeState extends State<CaretakerScreen> {
         ),
         icon: BitmapDescriptor.defaultMarker, //Icon for Marker
       ));
-      setState(() {
-
-      });
+      setState(() {});
     }
   }
 
@@ -90,7 +88,6 @@ class _HomeState extends State<CaretakerScreen> {
           title: title, body: body, fln: flutterLocalNotificationsPlugin);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +112,14 @@ class _HomeState extends State<CaretakerScreen> {
                   googleMapController = controller;
                 });
               },
+            ),
+            Container(
+              alignment: Alignment.topLeft,
+              padding: const EdgeInsets.only(top: 10, left: 5),
+              child: FloatingActionButton(
+                onPressed: () => {Navigator.pop(context)},
+                child: Icon(Icons.arrow_back),
+              ),
             ),
           ],
         ),
