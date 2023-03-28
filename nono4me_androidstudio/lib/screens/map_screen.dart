@@ -10,8 +10,10 @@ import "package:flutter_local_notifications/flutter_local_notifications.dart";
 
 class MapScreen extends StatefulWidget {
   //LatLng endLocation = LatLng(35.70613,139.3423);
-  static LatLng endLocation = LatLng(35.7061, 139.3423);
-  static LatLng currLocation = LatLng(35.7059, 139.3540);
+  // static LatLng endLocation = LatLng(35.7061, 139.3423);
+  // static LatLng currLocation = LatLng(35.7059, 139.3540);
+  static LatLng endLocation = LatLng(0, 0);
+  static LatLng currLocation = LatLng(0, 0);
   static bool offPath = true;
   @override
   _HomeState createState() => _HomeState();
