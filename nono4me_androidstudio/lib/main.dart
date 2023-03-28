@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nono4me_androidstudio/screens/login_page.dart';
 import 'package:nono4me_androidstudio/screens/map_screen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:workmanager/workmanager.dart';
@@ -63,7 +64,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MapScreen(),
+      home: LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
