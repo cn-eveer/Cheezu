@@ -181,7 +181,7 @@ class _HomeState extends State<MapScreen> {
         //TODO: Remove
         print("No progress");
         movementCounter++;
-        if (movementCounter > 3) {
+        if (movementCounter > 6) {
           movementCounter = 0;
           resetEverything();
           return;
