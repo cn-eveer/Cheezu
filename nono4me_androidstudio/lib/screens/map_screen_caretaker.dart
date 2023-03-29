@@ -58,8 +58,8 @@ class _HomeState extends State<CaretakerScreen> {
     if (MapScreen.offPath) {
       markers.add(Marker(
         //add distination location marker
-        markerId: MarkerId(MapScreen.endLocation.toString()),
-        position: MapScreen.endLocation, //position of marker
+        markerId: MarkerId(CaretakerScreen.endLocation.toString()),
+        position: CaretakerScreen.endLocation, //position of marker
         infoWindow: const InfoWindow(
           //popup info
           title: 'Destination Point ',
@@ -69,8 +69,8 @@ class _HomeState extends State<CaretakerScreen> {
       ));
       markers.add(Marker(
         //add distination location marker
-        markerId: MarkerId(MapScreen.currLocation.toString()),
-        position: MapScreen.currLocation, //position of marker
+        markerId: MarkerId(CaretakerScreen.currLocation.toString()),
+        position: CaretakerScreen.currLocation, //position of marker
         infoWindow: const InfoWindow(
           //popup info
           title: 'Current point ',

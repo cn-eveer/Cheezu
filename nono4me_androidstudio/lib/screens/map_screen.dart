@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
+import "package:nono4me_androidstudio/screens/map_screen_caretaker.dart";
 import 'package:nono4me_androidstudio/screens/search_places_button.dart';
 import 'package:nono4me_androidstudio/Utils/notifications_manager.dart';
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
@@ -14,7 +15,7 @@ class MapScreen extends StatefulWidget {
   // static LatLng currLocation = LatLng(35.7059, 139.3540);
   static LatLng endLocation = LatLng(0, 0);
   static LatLng currLocation = LatLng(0, 0);
-  static bool offPath = true;
+  static bool offPath = false;
   @override
   _HomeState createState() => _HomeState();
 }
@@ -63,6 +64,8 @@ class _HomeState extends State<MapScreen> {
   }
 
   resetEverything() {
+    CaretakerScreen.currLocation = LatLng(MapScreen.currLocation.latitude, MapScreen.currLocation.longitude);
+    CaretakerScreen.endLocation = LatLng(MapScreen.endLocation.latitude, MapScreen.endLocation.longitude);
     MapScreen.endLocation = LatLng(0, 0);
     MapScreen.currLocation = LatLng(0, 0);
     MapScreen.offPath = true;
@@ -177,7 +180,7 @@ class _HomeState extends State<MapScreen> {
         //TODO: Remove
         print("No progress");
         movementCounter++;
-        if (movementCounter > 300) {
+        if (movementCounter > 3) {
           movementCounter = 0;
           resetEverything();
           return;
@@ -355,7 +358,11 @@ class _HomeState extends State<MapScreen> {
               alignment: Alignment.topLeft,
               padding: const EdgeInsets.only(top: 10, left: 5),
               child: FloatingActionButton(
-                onPressed: () => {Navigator.pop(context)},
+                onPressed: () {
+                  notificationTimer!.cancel();
+                  checkLocationTimer!.cancel();
+                  Navigator.pop(context);
+                },
                 child: Icon(Icons.arrow_back),
               ),
             ),
