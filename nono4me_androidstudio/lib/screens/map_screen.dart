@@ -76,6 +76,7 @@ class _HomeState extends State<MapScreen> {
       tooFarFromHouse = false;
       leading = false;
       goingHome = false;
+      distance=0;
     });
     print("reset everything");
   }

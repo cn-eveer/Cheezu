@@ -40,7 +40,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(10),
                 child: const Text(
-                  'Cheese',
+                  'Cheezu',
                   style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.w500,
