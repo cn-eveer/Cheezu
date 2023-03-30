@@ -85,7 +85,8 @@ class _HomeState extends State<MapScreen> {
     var pos = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     MapScreen.currLocation = LatLng(pos.latitude, pos.longitude);
-
+    // print("Should have updated location");
+    // print(pos);
     if (leading && oldEndLocation != MapScreen.endLocation) {
       markers.add(Marker(
         //add distination location marker
@@ -111,12 +112,18 @@ class _HomeState extends State<MapScreen> {
       ));
       oldEndLocation = MapScreen.endLocation;
     }
+    setState(() {
+
+    });
   }
 
   switchLocations() {
     var a = startLocation;
     startLocation = MapScreen.endLocation;
     MapScreen.endLocation = a;
+    setState(() {
+
+    });
     //TODO: Delete
     print("Setting course back for home");
     leadToDestination();
@@ -181,7 +188,7 @@ class _HomeState extends State<MapScreen> {
         //TODO: Remove
         print("No progress");
         movementCounter++;
-        if (movementCounter > 6) {
+        if (movementCounter > 300) {
           movementCounter = 0;
           resetEverything();
           return;
@@ -203,7 +210,7 @@ class _HomeState extends State<MapScreen> {
     if (!leading) {
       if (distanceFromHouse > 40) {
         //TODO: Delete
-        print("Oi where the fuck you going");
+        //print("Oi where the fuck you going");
         askForDestination();
         tooFarFromHouse = true;
       } else {
