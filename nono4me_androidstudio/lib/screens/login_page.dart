@@ -5,7 +5,7 @@ import 'package:nono4me_androidstudio/screens/map_screen_caretaker.dart';
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
-  static const String _title = 'Login app';
+  static const String _title = 'Login Page';
 
   @override
   Widget build(BuildContext context) {
