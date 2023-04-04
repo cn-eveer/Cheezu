@@ -10,7 +10,7 @@
 - Dart SDK version: 
     - 2.16.1 (stable)
 - Flutter
-    - 2.10.2
+    - 3.7.7
 
 ### How to run
 1. Go to the cheezu directory
