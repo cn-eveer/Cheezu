@@ -8,7 +8,7 @@
 ### Works in
 - On local only
 - Dart SDK version: 
-    - 2.16.1 (stable)
+    - 2.16.4 (stable)
 - Flutter
     - 3.7.7
 
